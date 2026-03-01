@@ -787,9 +787,13 @@
   .nterm:hover { opacity:0.7; }
   .narrativa-more { font-family:var(--font-mono); font-size:8px; color:var(--accent); cursor:pointer; margin-top:4px; display:block; }
   /* Modal Narrativa */
-  #narrativaModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; }
+  #narrativaModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:flex-start; justify-content:center; padding-top:0; }
   #narrativaModal.open { display:flex; }
-  .narrativa-modal-box { background:var(--bg-panel); border:1px solid var(--border); padding:24px; max-width:600px; width:90%; max-height:80vh; overflow-y:auto; }
+  .narrativa-modal-box { background:var(--bg-panel); border:1px solid var(--border); padding:24px; max-width:600px; width:90%; max-height:92vh; overflow-y:auto; }
+  .narrativa-modal-box::-webkit-scrollbar { width:4px; }
+  .narrativa-modal-box::-webkit-scrollbar-track { background:var(--bg-deep); }
+  .narrativa-modal-box::-webkit-scrollbar-thumb { background:var(--accent); }
+  .narrativa-modal-box::-webkit-scrollbar-thumb:hover { background:var(--text-main); }
   .narrativa-modal-title { font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:3px; margin-bottom:16px; }
   .narrativa-modal-week { margin-bottom:20px; }
   .narrativa-modal-close { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:pointer; float:right; }
@@ -2611,15 +2615,33 @@ function narrativaColor(pos, neg, neu) {
   return '#00d4ff';
 }
 
-function buildCloud(terms, maxShow) {
+function buildCloud(terms, maxShow, from, to) {
   if (!terms.length) return '<span style="color:var(--text-dim);font-size:9px">Sin datos</span>';
   const maxCount = terms[0].count;
   const visible = terms.slice(0, maxShow);
   return visible.map(t => {
     const size  = 9 + Math.round((t.count / maxCount) * 7); // 9-16px
     const color = narrativaColor(t.pos, t.neg, t.neu);
-    return `<span class="nterm" style="font-size:${size}px;color:${color}" title="${t.count} menciones">${t.term}</span>`;
+    const safeTerm = t.term.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    const click = from ? ` onclick="openTermMentions('${safeTerm}','${from}','${to}')"` : '';
+    const hint  = from ? ' · click para ver menciones' : '';
+    return `<span class="nterm" style="font-size:${size}px;color:${color};cursor:${from?'pointer':'default'}" title="${t.count} menciones${hint}"${click}>${t.term}</span>`;
   }).join('');
+}
+
+function openTermMentions(term, from, to) {
+  document.getElementById('narrativaModal').classList.remove('open');
+  const txt = term.toLowerCase();
+  const matches = ALL_MENTIONS.filter(m =>
+    m.date >= from && m.date <= to &&
+    ((m.title||'')+(m.content||'')).toLowerCase().includes(txt)
+  );
+  document.getElementById('drawerTitle').textContent = term.toUpperCase();
+  document.getElementById('drawerSubtitle').textContent =
+    `${matches.length} mención${matches.length !== 1 ? 'es' : ''} · ${from} → ${to}`;
+  renderDrawerMentions(matches, [term]);
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
 }
 
 function renderNarrativa() {
@@ -2634,7 +2656,7 @@ function renderNarrativa() {
         <span class="narrativa-week-label">${w.label.toUpperCase()}</span>
         <span class="narrativa-week-dates">${w.from} / ${w.to}</span>
       </div>
-      <div class="narrativa-cloud">${buildCloud(w.terms, 16)}</div>
+      <div class="narrativa-cloud">${buildCloud(w.terms, 16, w.from, w.to)}</div>
       ${w.terms.length > 16 ? `<span class="narrativa-more" onclick="openNarrativaModal(${i})">+ ver todos (${w.terms.length})</span>` : ''}
     </div>
   `).join('');
@@ -2650,7 +2672,7 @@ function openNarrativaModal(weekIdx) {
         <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-bottom:8px">
           ${w.label.toUpperCase()} &nbsp; <span style="color:var(--accent)">${w.from} → ${w.to}</span>
         </div>
-        <div>${buildCloud(w.terms, 40)}</div>
+        <div>${buildCloud(w.terms, 40, w.from, w.to)}</div>
       </div>`;
   }).join('');
   modal.classList.add('open');
