@@ -797,6 +797,24 @@
   .narrativa-modal-title { font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:3px; margin-bottom:16px; }
   .narrativa-modal-week { margin-bottom:20px; }
   .narrativa-modal-close { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:pointer; float:right; }
+  /* Panel & Modal Briefing IA */
+  #briefingPanel { overflow-y:auto; max-height:260px; }
+  #briefingBody p { font-family:var(--font-mono); font-size:11px; color:#c9d9e8; line-height:1.6; margin:0 0 8px; }
+  .briefing-link { font-family:var(--font-mono); font-size:9px; color:var(--accent); cursor:pointer; letter-spacing:1px; display:block; }
+  .briefing-link:hover { opacity:0.7; }
+  #briefingModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; align-items:center; justify-content:center; }
+  #briefingModal.open { display:flex; }
+  .briefing-modal-box { background:var(--bg-panel); border:1px solid var(--border); padding:24px; max-width:640px; width:92%; max-height:92vh; overflow-y:auto; margin:auto; }
+  .briefing-modal-box::-webkit-scrollbar { width:4px; }
+  .briefing-modal-box::-webkit-scrollbar-track { background:var(--bg-deep); }
+  .briefing-modal-box::-webkit-scrollbar-thumb { background:var(--accent); }
+  .briefing-modal-title { font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:3px; margin-bottom:16px; }
+  .briefing-modal-section { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; margin:14px 0 6px; border-bottom:1px solid var(--border); padding-bottom:4px; }
+  .briefing-modal-close { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:pointer; float:right; }
+  .briefing-modal-box p { font-family:var(--font-mono); font-size:11px; color:#c9d9e8; line-height:1.6; margin:0 0 8px; }
+  .briefing-modal-box ul { margin:0; padding-left:16px; }
+  .briefing-modal-box li { font-family:var(--font-mono); font-size:10px; color:#c9d9e8; line-height:1.7; }
+  #briefingModalDateRange { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-bottom:12px; letter-spacing:1px; }
 </style>
 </head>
 <body>
@@ -897,9 +915,15 @@
         <div class="kpi-sub" id="kpiPosPct">—</div>
       </div>
     </div>
-    <div class="panel nuevo-indicador-panel" style="display:flex;align-items:center;justify-content:center;">
-      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:3px;color:var(--border);text-align:center;">
-        // NUEVO INDICADOR
+    <div class="panel nuevo-indicador-panel" id="briefingPanel">
+      <div class="panel-title">
+        BRIEFING
+        <span id="briefingRefreshBtn" onclick="loadBriefing(true)" title="Regenerar análisis"
+              style="float:right;cursor:pointer;font-size:11px;opacity:.5">↺</span>
+      </div>
+      <div id="briefingDateLabel" style="font-size:9px;color:#8ba3b8;margin-bottom:6px"></div>
+      <div id="briefingBody">
+        <div style="font-family:var(--font-mono);font-size:11px;color:#8ba3b8">—</div>
       </div>
     </div>
   </div>
@@ -1013,6 +1037,7 @@
         <div id="narrativaModalBody"></div>
       </div>
     </div>
+
 
     <!-- FEED -->
     <div class="panel">
@@ -1358,6 +1383,21 @@
   </div>
 </div>
 
+<!-- Modal Briefing IA — hijo directo de body, fuera de cualquier contenedor con transform -->
+<div id="briefingModal">
+  <div class="briefing-modal-box">
+    <span class="briefing-modal-close" onclick="closeBriefingModal()">[ CERRAR ]</span>
+    <div class="briefing-modal-title">BRIEFING — ANÁLISIS COMPLETO</div>
+    <div id="briefingModalDateRange"></div>
+    <div class="briefing-modal-section">// RESUMEN</div>
+    <p id="briefingModalResumen"></p>
+    <div class="briefing-modal-section">// INSIGHTS</div>
+    <ul id="briefingModalInsights"></ul>
+    <div class="briefing-modal-section">// TENDENCIAS</div>
+    <ul id="briefingModalTendencias"></ul>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════
 // CONFIG
@@ -1445,6 +1485,7 @@ async function loadData() {
     renderKeywords();
     updateAll();
     loadNarrativa();
+    loadBriefing();
 
   } catch (err) {
     console.error('loadData error:', err);
@@ -1463,6 +1504,7 @@ function applyFilter() {
   if (activeKw) filteredData = filteredData.filter(m => matchKw(m, activeKw));
   updateAll();
   if (p2Initialized) p2LoadData();
+  loadBriefing();
 }
 function resetFilter() {
   const _localToday = (d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)(new Date());
@@ -2588,6 +2630,60 @@ function lpRenderModal() {
 
 // ── Narrativa Dominante ────────────────────────────────────────
 let NARRATIVA_DATA = null;
+
+// ── Briefing IA ────────────────────────────────────────────────
+let BRIEFING_DATA = null;
+
+async function loadBriefing(force = false) {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  if (!force && BRIEFING_DATA && BRIEFING_DATA.from_date === from && BRIEFING_DATA.to_date === to) return;
+
+  const label = document.getElementById('briefingDateLabel');
+  const body  = document.getElementById('briefingBody');
+  if (label) label.textContent = `${from} → ${to}`;
+  if (body)  body.innerHTML = '<div style="font-family:var(--font-mono);font-size:11px;color:#8ba3b8">Generando análisis...</div>';
+
+  try {
+    const forceParam = force ? '&force=1' : '';
+    const url = `${CONFIG.apiUrl}/api/v1/briefing?project_id=${CONFIG.projectId}&from_date=${from}&to_date=${to}${forceParam}`;
+    const resp = await fetch(url, {
+      headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' },
+      mode: 'cors',
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    BRIEFING_DATA = await resp.json();
+    renderBriefing(BRIEFING_DATA);
+  } catch(e) {
+    console.warn('Briefing no disponible:', e);
+    if (body) body.innerHTML = '<div style="font-family:var(--font-mono);font-size:10px;color:#5a7a94">Análisis no disponible</div>';
+  }
+}
+
+function renderBriefing(data) {
+  const body = document.getElementById('briefingBody');
+  if (!body) return;
+  const resumen = (data.resumen || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  body.innerHTML = `<p>${resumen}</p><span class="briefing-link" onclick="openBriefingModal()">[ VER INSIGHTS Y TENDENCIAS → ]</span>`;
+}
+
+function openBriefingModal() {
+  if (!BRIEFING_DATA) return;
+  document.getElementById('briefingModalDateRange').textContent = `${BRIEFING_DATA.from_date} → ${BRIEFING_DATA.to_date}`;
+  document.getElementById('briefingModalResumen').textContent = BRIEFING_DATA.resumen || '';
+  const insightsEl = document.getElementById('briefingModalInsights');
+  insightsEl.innerHTML = (BRIEFING_DATA.insights || []).map(i => `<li>${i.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</li>`).join('');
+  const tendEl = document.getElementById('briefingModalTendencias');
+  tendEl.innerHTML = (BRIEFING_DATA.tendencias || []).map(t => `<li>${t.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</li>`).join('');
+  document.getElementById('briefingModal').classList.add('open');
+}
+
+function closeBriefingModal() {
+  document.getElementById('briefingModal').classList.remove('open');
+}
+document.getElementById('briefingModal').addEventListener('click', function(e) {
+  if (e.target === this) closeBriefingModal();
+});
 
 async function loadNarrativa() {
   try {
