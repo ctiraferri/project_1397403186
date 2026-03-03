@@ -676,7 +676,7 @@
   #page2 .total-block { text-align:center; padding:10px 0 14px; border-bottom:1px solid var(--border-dim); margin-bottom:14px; }
   #page2 .total-label { font-family:var(--font-mono); font-size:9px; letter-spacing:3px; color:var(--text-faint); margin-bottom:4px; }
   #page2 .total-val { font-family:var(--font-display); font-size:48px; color:var(--text-main); line-height:1; }
-  #page2 .total-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); margin-top:3px; }
+  #page2 .total-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-main); margin-top:3px; }
   #page2 .cards-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
   #page2 .reach-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:12px 14px; }
   #page2 .reach-card.social    { border-top:2px solid var(--purple); }
@@ -732,6 +732,10 @@
   #p2ModalOverlay .lp-plat-btn.x.active  { border-color:#1da1f2; background:rgba(29,161,242,0.15); color:#fff; }
   #p2ModalOverlay .lp-plat-btn.all.active { border-color:var(--accent); background:var(--accent-dim); color:var(--accent); }
   #p2ModalOverlay .lp-modal-body { overflow-y:auto; flex:1; }
+  #p2ModalOverlay .lp-modal-body::-webkit-scrollbar { width:4px; }
+  #p2ModalOverlay .lp-modal-body::-webkit-scrollbar-track { background:var(--bg-deep); }
+  #p2ModalOverlay .lp-modal-body::-webkit-scrollbar-thumb { background:var(--accent); }
+  #p2ModalOverlay .lp-modal-body::-webkit-scrollbar-thumb:hover { background:var(--text-main); }
   #p2ModalOverlay .lp-modal-table { width:100%; border-collapse:collapse; }
   #p2ModalOverlay .lp-modal-table thead th { position:sticky; top:0; background:var(--bg-card); padding:8px 14px; font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-dim); text-align:left; border-bottom:1px solid var(--border); cursor:pointer; white-space:nowrap; }
   #p2ModalOverlay .lp-modal-table thead th:hover, #p2ModalOverlay .lp-modal-table thead th.sorted { color:var(--accent); }
@@ -812,9 +816,9 @@
   .briefing-modal-title { font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:3px; margin-bottom:16px; }
   .briefing-modal-section { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; margin:14px 0 6px; border-bottom:1px solid var(--border); padding-bottom:4px; }
   .briefing-modal-close { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:pointer; float:right; }
-  .briefing-modal-box p { font-family:var(--font-mono); font-size:11px; color:#c9d9e8; line-height:1.6; margin:0 0 8px; }
+  .briefing-modal-box p { font-family:var(--font-mono); font-size:13px; color:#c9d9e8; line-height:1.6; margin:0 0 8px; }
   .briefing-modal-box ul { margin:0; padding-left:16px; }
-  .briefing-modal-box li { font-family:var(--font-mono); font-size:10px; color:#c9d9e8; line-height:1.7; }
+  .briefing-modal-box li { font-family:var(--font-mono); font-size:12px; color:#c9d9e8; line-height:1.7; }
   #briefingModalDateRange { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-bottom:12px; letter-spacing:1px; }
 </style>
 </head>
@@ -840,7 +844,7 @@
         </button>
         <div class="page-menu" id="pageMenu">
           <button class="page-menu-item active" onclick="switchPage(1)">PÁG. 01 / OVERVIEW</button>
-          <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / LISTENING</button>
+          <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / RADAR</button>
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
@@ -1189,7 +1193,7 @@
         <!-- IND.04 -->
         <div class="panel" id="panel-ind04">
           <div class="panel-header" data-color="red">
-            <div class="panel-title">IND. 04 — OPERACIONES DE PRENSA COORDINADAS</div>
+            <div class="panel-title">IND. 04 — POSIBLES OPERACIONES COORDINADAS</div>
             <div class="help-btn r">?
               <div class="help-tooltip">
                 <div class="help-tt-title">// ¿QUÉ ES UNA OPERACIÓN?</div>
@@ -1201,12 +1205,12 @@
           <div class="stats-row" id="stats04">
             <div class="stat-box"><div class="stat-label">OPERACIONES ACTIVAS</div><div class="stat-val red" id="s04-ops">—</div><div class="stat-sub">narrativas coordinadas</div></div>
             <div class="stat-box"><div class="stat-label">MEDIOS INVOLUCRADOS</div><div class="stat-val accent" id="s04-media">—</div><div class="stat-sub">operadores únicos</div></div>
-            <div class="stat-box"><div class="stat-label">OPERADORES RECURRENTES</div><div class="stat-val yellow" id="s04-recur">—</div><div class="stat-sub">en 2+ operaciones</div></div>
+            <div class="stat-box"><div class="stat-label">POSIBLES OPERADORES RECURRENTES</div><div class="stat-val yellow" id="s04-recur">—</div><div class="stat-sub">en 2+ operaciones</div></div>
             <div class="stat-box"><div class="stat-label">MAYOR ALCANCE</div><div class="stat-val red" id="s04-max">—</div><div class="stat-sub" id="s04-maxsub">medios</div></div>
           </div>
           <div class="section-label">// OPERACIONES DETECTADAS</div>
           <div class="op-list" id="opList04"></div>
-          <div class="section-label">// OPERADORES RECURRENTES</div>
+          <div class="section-label">// POSIBLES OPERADORES RECURRENTES</div>
           <div class="rec-grid" id="recGrid04"></div>
           <div class="insight-bar" id="insight04">⚡ Cargando datos…</div>
         </div>
@@ -1416,6 +1420,7 @@ const CONFIG = {
 // DATA (poblado por loadData())
 // ══════════════════════════════════════════
 let ALL_MENTIONS = [];
+let MENTION_BY_ID = {};
 let KEYWORDS_DEF = [];
 let DATA_LOADED  = false;
 
@@ -1470,6 +1475,7 @@ async function loadData() {
     const data = await resp.json();
 
     ALL_MENTIONS = data.mentions || [];
+    MENTION_BY_ID = Object.fromEntries(ALL_MENTIONS.map(m => [String(m.mention_id), m]));
     KEYWORDS_DEF = (data.keywords || []).map(k => ({
       word:  k.word,
       col:   k.color,
@@ -2771,19 +2777,24 @@ function buildCloud(terms, maxShow, from, to) {
   }).join('');
 }
 
-function openTermMentions(term, from, to) {
+async function openTermMentions(term, from, to) {
   document.getElementById('narrativaModal').classList.remove('open');
-  const txt = term.toLowerCase();
-  const matches = ALL_MENTIONS.filter(m =>
-    m.date >= from && m.date <= to &&
-    ((m.title||'')+(m.content||'')).toLowerCase().includes(txt)
-  );
   document.getElementById('drawerTitle').textContent = term.toUpperCase();
-  document.getElementById('drawerSubtitle').textContent =
-    `${matches.length} mención${matches.length !== 1 ? 'es' : ''} · ${from} → ${to}`;
-  renderDrawerMentions(matches, [term]);
+  document.getElementById('drawerSubtitle').textContent = 'Cargando menciones…';
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
+  try {
+    const url = `${CONFIG.apiUrl}/api/v1/term_mentions?project_id=${CONFIG.projectId}&term=${encodeURIComponent(term)}&from_date=${from}&to_date=${to}`;
+    const resp = await fetch(url, { headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' }, mode: 'cors' });
+    const data = await resp.json();
+    const ids = new Set((data.mention_ids || []).map(String));
+    const matches = ALL_MENTIONS.filter(m => m.date >= from && m.date <= to && ids.has(String(m.mention_id)));
+    document.getElementById('drawerSubtitle').textContent =
+      `${matches.length} mención${matches.length !== 1 ? 'es' : ''} · ${from} → ${to}`;
+    renderDrawerMentions(matches, [term]);
+  } catch(e) {
+    document.getElementById('drawerSubtitle').textContent = 'Error cargando menciones';
+  }
 }
 
 function renderNarrativa() {
