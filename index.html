@@ -2670,12 +2670,12 @@ function renderBriefing(data) {
   if (!body) return;
   const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const b = data.briefing || {};
-  const score = b.clima_social_score !== undefined ? b.clima_social_score : '—';
-  const label = esc(b.clima_social_label || '');
+  const score = b.ics_score !== undefined ? b.ics_score : (b.clima_social_score !== undefined ? b.clima_social_score : '—');
+  const label = esc(b.ics_label || b.clima_social_label || '');
   const sent  = esc(b.sentimiento || '');
   const narr  = esc(b.narrativa_dominante || '');
   body.innerHTML =
-    `<p><strong>Clima Social:</strong> ${score} — ${label}</p>` +
+    `<p><strong>ICS:</strong> ${score} — ${label}</p>` +
     `<p>${sent}</p>` +
     `<p>${narr}</p>` +
     `<span class="briefing-link" onclick="openBriefingModal()">[ VER ANÁLISIS COMPLETO → ]</span>`;
@@ -2687,8 +2687,10 @@ function openBriefingModal() {
   document.getElementById('briefingModalDateRange').textContent = `${BRIEFING_DATA.from_date} → ${BRIEFING_DATA.to_date}`;
 
   const b = BRIEFING_DATA.briefing || {};
+  const bIcsScore = b.ics_score !== undefined ? b.ics_score : (b.clima_social_score !== undefined ? b.clima_social_score : '—');
+  const bIcsLabel = esc(b.ics_label || b.clima_social_label || '');
   document.getElementById('briefingModalBriefing').innerHTML =
-    `<p><strong>Clima Social:</strong> ${b.clima_social_score} — ${esc(b.clima_social_label)}</p>` +
+    `<p><strong>ICS:</strong> ${bIcsScore} — ${bIcsLabel}</p>` +
     `<p><strong>Sentimiento:</strong> ${esc(b.sentimiento)}</p>` +
     `<p><strong>Polarización:</strong> ${b.polarizacion_pct}%</p>` +
     `<p><strong>Narrativa dominante:</strong> ${esc(b.narrativa_dominante)}</p>`;
