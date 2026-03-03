@@ -1390,12 +1390,16 @@
     <span class="briefing-modal-close" onclick="closeBriefingModal()">[ CERRAR ]</span>
     <div class="briefing-modal-title">BRIEFING — ANÁLISIS COMPLETO</div>
     <div id="briefingModalDateRange"></div>
-    <div class="briefing-modal-section">// RESUMEN</div>
-    <p id="briefingModalResumen"></p>
-    <div class="briefing-modal-section">// INSIGHTS</div>
-    <ul id="briefingModalInsights"></ul>
-    <div class="briefing-modal-section">// TENDENCIAS</div>
-    <ul id="briefingModalTendencias"></ul>
+    <div class="briefing-modal-section">// 1. BRIEFING</div>
+    <div id="briefingModalBriefing"></div>
+    <div class="briefing-modal-section">// 2. RIESGO REPUTACIONAL</div>
+    <div id="briefingModalRiesgo"></div>
+    <div class="briefing-modal-section">// 3. EFICIENCIA DE AMPLIFICACIÓN</div>
+    <div id="briefingModalEficiencia"></div>
+    <div class="briefing-modal-section">// 4. NARRATIVAS Y TEMAS</div>
+    <div id="briefingModalNarrativas"></div>
+    <div class="briefing-modal-section">// 5. PRIORIDADES DE ACCIÓN</div>
+    <ul id="briefingModalPrioridades"></ul>
   </div>
 </div>
 
@@ -1405,7 +1409,7 @@
 // ══════════════════════════════════════════
 const CONFIG = {
   apiUrl: 'https://warroom-b24.catconsultores.com.ar',
-  projectId:   1397403186,
+  projectId:   1397409048,
 };
 
 // ══════════════════════════════════════════
@@ -2148,7 +2152,7 @@ async function p2LoadData() {
   const from = document.getElementById('dateFrom').value;
   const to   = document.getElementById('dateTo').value;
   try {
-    const resp = await fetch(`${CONFIG.apiUrl}/api/listening/summary?dateFrom=${from}&dateTo=${to}`, {
+    const resp = await fetch(`${CONFIG.apiUrl}/api/listening/summary?project_id=${CONFIG.projectId}&dateFrom=${from}&dateTo=${to}`, {
       headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' },
       mode: 'cors',
     });
@@ -2664,18 +2668,57 @@ async function loadBriefing(force = false) {
 function renderBriefing(data) {
   const body = document.getElementById('briefingBody');
   if (!body) return;
-  const resumen = (data.resumen || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  body.innerHTML = `<p>${resumen}</p><span class="briefing-link" onclick="openBriefingModal()">[ VER INSIGHTS Y TENDENCIAS → ]</span>`;
+  const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const b = data.briefing || {};
+  const score = b.clima_social_score !== undefined ? b.clima_social_score : '—';
+  const label = esc(b.clima_social_label || '');
+  const sent  = esc(b.sentimiento || '');
+  const narr  = esc(b.narrativa_dominante || '');
+  body.innerHTML =
+    `<p><strong>Clima Social:</strong> ${score} — ${label}</p>` +
+    `<p>${sent}</p>` +
+    `<p>${narr}</p>` +
+    `<span class="briefing-link" onclick="openBriefingModal()">[ VER ANÁLISIS COMPLETO → ]</span>`;
 }
 
 function openBriefingModal() {
   if (!BRIEFING_DATA) return;
+  const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   document.getElementById('briefingModalDateRange').textContent = `${BRIEFING_DATA.from_date} → ${BRIEFING_DATA.to_date}`;
-  document.getElementById('briefingModalResumen').textContent = BRIEFING_DATA.resumen || '';
-  const insightsEl = document.getElementById('briefingModalInsights');
-  insightsEl.innerHTML = (BRIEFING_DATA.insights || []).map(i => `<li>${i.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</li>`).join('');
-  const tendEl = document.getElementById('briefingModalTendencias');
-  tendEl.innerHTML = (BRIEFING_DATA.tendencias || []).map(t => `<li>${t.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</li>`).join('');
+
+  const b = BRIEFING_DATA.briefing || {};
+  document.getElementById('briefingModalBriefing').innerHTML =
+    `<p><strong>Clima Social:</strong> ${b.clima_social_score} — ${esc(b.clima_social_label)}</p>` +
+    `<p><strong>Sentimiento:</strong> ${esc(b.sentimiento)}</p>` +
+    `<p><strong>Polarización:</strong> ${b.polarizacion_pct}%</p>` +
+    `<p><strong>Narrativa dominante:</strong> ${esc(b.narrativa_dominante)}</p>`;
+
+  const r = BRIEFING_DATA.riesgo_reputacional || {};
+  document.getElementById('briefingModalRiesgo').innerHTML =
+    `<p><strong>Señales de crisis:</strong> ${esc(r.senales_crisis)}</p>` +
+    `<p><strong>Métricas de alerta:</strong> ${esc(r.metricas_alerta)}</p>` +
+    `<p><strong>Tendencia polarización:</strong> ${esc(r.tendencia_polarizacion)}</p>`;
+
+  const ef = BRIEFING_DATA.eficiencia_amplificacion || {};
+  document.getElementById('briefingModalEficiencia').innerHTML =
+    `<p><strong>ICA:</strong> ${ef.ica_pct}% — ${esc(ef.ica_interpretacion)}</p>` +
+    `<p><strong>Red mayor alcance:</strong> ${esc(ef.red_mayor_alcance)}</p>` +
+    `<p><strong>Análisis Nx:</strong> ${esc(ef.nx_analisis)}</p>`;
+
+  const n = BRIEFING_DATA.narrativas_temas || {};
+  document.getElementById('briefingModalNarrativas').innerHTML =
+    `<p><strong>Narrativas dominantes:</strong> ${esc(n.narrativas_dominantes)}</p>` +
+    `<p><strong>Temas articuladores:</strong> ${esc(n.temas_articuladores)}</p>` +
+    `<p><strong>Impactos políticos:</strong> ${esc(n.impactos_politicos)}</p>`;
+
+  const prios = BRIEFING_DATA.prioridades_accion || [];
+  document.getElementById('briefingModalPrioridades').innerHTML = prios.map(p => {
+    const col = p.urgencia === 'alta' ? '#e05555' : p.urgencia === 'media' ? '#e0a855' : '#55a8e0';
+    return `<li><span style="color:${col};font-weight:bold">[${esc(p.urgencia).toUpperCase()}]</span> ` +
+           `<strong>${esc(p.accion)}</strong> — ${esc(p.objetivo)} ` +
+           `<span style="color:#8ba3b8">(${esc(p.metrica)})</span></li>`;
+  }).join('');
+
   document.getElementById('briefingModal').classList.add('open');
 }
 
