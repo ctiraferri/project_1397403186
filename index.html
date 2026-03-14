@@ -3043,7 +3043,13 @@ function p3RenderCards03() {
     document.getElementById('p3-insight03').innerHTML = '// Sin datos para el período seleccionado.';
     return;
   }
-  const pool   = lpActiveFilter03==='all' ? lpInfData : lpInfData.filter(r=>r.domain===lpActiveFilter03);
+  // Filtro global: descartar tercio inferior de reach
+  const byReach = [...lpInfData].sort((a,b) => b.reach - a.reach);
+  const cutIndex = Math.ceil(byReach.length * 2 / 3);
+  const afterReachFilter = byReach.length >= 3 ? byReach.slice(0, cutIndex) : [...byReach];
+  const excludedCount = lpInfData.length - afterReachFilter.length;
+
+  const pool   = lpActiveFilter03==='all' ? afterReachFilter : afterReachFilter.filter(r=>r.domain===lpActiveFilter03);
   const sorted = [...pool].sort((a,b)=>b.eff-a.eff);
   const top5   = sorted.slice(0,5);
   while (top5.length < 5) top5.push(null);
@@ -3083,7 +3089,8 @@ function p3RenderCards03() {
     document.getElementById('p3-insight03').innerHTML =
       `⚡ <span class="hl">${sorted[0].name}</span> lidera con <span class="hl">${lpFmtNx(sorted[0].eff)}</span> en ${fLabel} · ` +
       `Distribución: <span class="hl">${viral} viral</span> / <span class="hl-y">${normal} normal</span> / ${bajo} bajo · ` +
-      `Promedio: <span class="hl-y">${avg.toFixed(2)}x</span>`;
+      `Promedio: <span class="hl-y">${avg.toFixed(2)}x</span>` +
+      (excludedCount > 0 ? ` · <span style="color:var(--text-faint)">${excludedCount} medio${excludedCount!==1?'s':''} excluido${excludedCount!==1?'s':''} (tercio inferior reach)</span>` : '');
   }
 }
 
