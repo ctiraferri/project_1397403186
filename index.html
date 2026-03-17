@@ -694,9 +694,9 @@
   #page2 .domain-tag { font-family:var(--font-mono); font-size:9px; color:var(--accent); background:var(--accent-dim); padding:2px 8px; border:1px solid rgba(0,212,255,0.15); }
   #page2 .domain-tag.recurrent { color:var(--accent); background:var(--accent-dim); border-color:rgba(0,212,255,0.15); }
   #page2 .rec-grid { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
-  #page2 .rec-row { display:flex; align-items:center; gap:12px; padding:8px 12px; background:var(--bg-card); border:1px solid var(--red-brd); }
-  #page2 .rec-domain { font-family:var(--font-mono); font-size:11px; color:var(--red); flex:1; }
-  #page2 .rec-count  { font-family:var(--font-display); font-size:22px; color:var(--red); width:32px; text-align:right; }
+  #page2 .rec-row { display:flex; align-items:center; gap:12px; padding:8px 12px; background:var(--bg-card); border:1px solid var(--border-dim); }
+  #page2 .rec-domain { font-family:var(--font-mono); font-size:11px; color:var(--accent); flex:1; }
+  #page2 .rec-count  { font-family:var(--font-display); font-size:22px; color:var(--text-main); width:32px; text-align:right; }
   #page2 .rec-label  { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
   #page2 .rec-ops    { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); flex:2; }
   /* IND.05 */
@@ -977,9 +977,9 @@
   #page3 .domain-tag { font-family:var(--font-mono); font-size:9px; color:var(--accent); background:var(--accent-dim); padding:2px 8px; border:1px solid rgba(0,212,255,0.15); }
   #page3 .domain-tag.recurrent { color:var(--accent); background:var(--accent-dim); border-color:rgba(0,212,255,0.15); }
   #page3 .rec-grid { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
-  #page3 .rec-row { display:flex; align-items:center; gap:12px; padding:8px 12px; background:var(--bg-card); border:1px solid var(--red-brd); }
-  #page3 .rec-domain { font-family:var(--font-mono); font-size:11px; color:var(--red); flex:1; }
-  #page3 .rec-count  { font-family:var(--font-display); font-size:22px; color:var(--red); width:32px; text-align:right; }
+  #page3 .rec-row { display:flex; align-items:center; gap:12px; padding:8px 12px; background:var(--bg-card); border:1px solid var(--border-dim); }
+  #page3 .rec-domain { font-family:var(--font-mono); font-size:11px; color:var(--accent); flex:1; }
+  #page3 .rec-count  { font-family:var(--font-display); font-size:22px; color:var(--text-main); width:32px; text-align:right; }
   #page3 .rec-label  { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
   #page3 .rec-ops    { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); flex:2; }
   /* IND.05 */
@@ -1303,7 +1303,7 @@
 
   /* ── Narrativa Dominante ────────────────────────────── */
   .narrativa-section { display:flex; flex-direction:column; gap:0; height:100%; }
-  .narrativa-week { flex:1; padding:8px 0; border-bottom:1px solid var(--border-dim); overflow:hidden; position:relative; }
+  .narrativa-week { flex:1; padding:8px 0; border-bottom:1px solid var(--border-dim); overflow:visible; position:relative; }
   .narrativa-week:last-child { border-bottom:none; }
   .narrativa-week-hdr { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px; }
   .narrativa-week-label { font-family:var(--font-mono); font-size:8px; color:var(--text-dim); letter-spacing:2px; }
@@ -1311,18 +1311,6 @@
   .narrativa-cloud { line-height:1.6; }
   .nterm { display:inline-block; margin:2px 3px; padding:2px 7px; border:1px solid currentColor; font-family:var(--font-mono); cursor:pointer; transition:opacity 0.2s; }
   .nterm:hover { opacity:0.7; }
-  .narrativa-more { font-family:var(--font-mono); font-size:8px; color:var(--accent); cursor:pointer; margin-top:4px; display:block; }
-  /* Modal Narrativa */
-  #narrativaModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:flex-start; justify-content:center; padding-top:0; }
-  #narrativaModal.open { display:flex; }
-  .narrativa-modal-box { background:var(--bg-panel); border:1px solid var(--border); padding:24px; max-width:600px; width:90%; max-height:92vh; overflow-y:auto; }
-  .narrativa-modal-box::-webkit-scrollbar { width:4px; }
-  .narrativa-modal-box::-webkit-scrollbar-track { background:var(--bg-deep); }
-  .narrativa-modal-box::-webkit-scrollbar-thumb { background:var(--accent); }
-  .narrativa-modal-box::-webkit-scrollbar-thumb:hover { background:var(--text-main); }
-  .narrativa-modal-title { font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:3px; margin-bottom:16px; }
-  .narrativa-modal-week { margin-bottom:20px; }
-  .narrativa-modal-close { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:pointer; float:right; }
   /* Panel & Modal Briefing IA */
   #briefingPanel { overflow-y:auto; }
   #briefingPanel .panel-title { font-size:9px; letter-spacing:2px; margin-bottom:10px; padding-bottom:8px; }
@@ -1575,14 +1563,6 @@
       </div>
     </div>
 
-    <!-- Modal Narrativa -->
-    <div id="narrativaModal">
-      <div class="narrativa-modal-box">
-        <span class="narrativa-modal-close" onclick="closeNarrativaModal()">[ CERRAR ]</span>
-        <div class="narrativa-modal-title">NARRATIVA DOMINANTE — DETALLE</div>
-        <div id="narrativaModalBody"></div>
-      </div>
-    </div>
 
 
     <!-- FEED -->
@@ -2707,7 +2687,7 @@ function updatePlatformBars(d) {
   d.forEach(m => cats[m.category] = (cats[m.category]||0)+1);
   const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
   const max = sorted[0]?.[1]||1;
-  const colors = {'Noticias':'var(--accent)','X (Twitter)':'#1d9bf0','Facebook':'#1877f2','TikTok':'#ff0050','Web':'var(--neutral)','Blogs':'var(--text-faint)'};
+  const colors = {'Noticias':'var(--accent)','X (Twitter)':'#1d9bf0','Facebook':'#1877f2','TikTok':'var(--accent)','Web':'var(--neutral)','Blogs':'var(--text-faint)'};
   const container = document.getElementById('platformBars');
   container.innerHTML = sorted.map(([cat,cnt]) => `
     <div class="plat-bar">
@@ -2744,8 +2724,8 @@ function renderDomains(d) {
       <div class="source-rank">${String(i+1).padStart(2,'0')}</div>
       <div class="source-icon" style="background:#1a1a2e;color:${ic}">${ic2||'◉'}</div>
       <div class="source-name">${dom}</div>
-      <div class="source-bar-wrap"><div class="source-bar-fill" style="width:${cnt/max*100}%;${hasNeg?'background:var(--red);opacity:0.6':''}"></div></div>
-      <div class="source-count" style="${hasNeg?'color:var(--red)':''}">${cnt}</div>
+      <div class="source-bar-wrap"><div class="source-bar-fill" style="width:${cnt/max*100}%"></div></div>
+      <div class="source-count">${cnt}</div>
     </div>`;
   }).join('');
 }
@@ -3354,7 +3334,7 @@ function o_lpRenderInd04() {
   document.getElementById('lp2-recGrid04').innerHTML = recurring.map(r =>
     `<div class="rec-row">
       <div class="rec-domain">${r.domain}</div>
-      <div><div class="rec-count">${r.ops}</div><div class="rec-label">ops.</div></div>
+      <div><div class="rec-count">${r.ops}</div><div class="rec-label">narr.</div></div>
       <div class="rec-ops">${r.narrativas||'—'}</div>
     </div>`
   ).join('');
@@ -3856,7 +3836,7 @@ function p2RenderInd03(listenData) {
   document.getElementById('recGrid04').innerHTML = recurring.map(r =>
     `<div class="rec-row">
       <div class="rec-domain">${r.domain}</div>
-      <div><div class="rec-count">${r.ops}</div><div class="rec-label">ops.</div></div>
+      <div><div class="rec-count">${r.ops}</div><div class="rec-label">narr.</div></div>
       <div class="rec-ops">${r.narrativas||'—'}</div>
     </div>`
   ).join('');
@@ -4431,7 +4411,6 @@ function buildCloud(terms, maxShow, from, to) {
 }
 
 async function openTermMentions(term, from, to) {
-  document.getElementById('narrativaModal').classList.remove('open');
   document.getElementById('drawerTitle').textContent = term.toUpperCase();
   document.getElementById('drawerSubtitle').textContent = 'Cargando menciones…';
   document.getElementById('drawerOverlay').classList.add('open');
@@ -4473,34 +4452,11 @@ function renderNarrativa() {
         <span class="narrativa-week-label">${w.label.toUpperCase()}</span>
         <span class="narrativa-week-dates">${w.from} / ${w.to}</span>
       </div>
-      <div class="narrativa-cloud">${buildCloud(w.terms, 16, w.from, w.to)}</div>
-      ${w.terms.length > 16 ? `<span class="narrativa-more" onclick="openNarrativaModal(${i})">+ ver todos (${w.terms.length})</span>` : ''}
+      <div class="narrativa-cloud">${buildCloud(w.terms, 40, w.from, w.to)}</div>
     </div>
   `).join('');
 }
 
-function openNarrativaModal(weekIdx) {
-  const modal     = document.getElementById('narrativaModal');
-  const modalBody = document.getElementById('narrativaModalBody');
-  modalBody.innerHTML = NARRATIVA_DATA.weeks.map((w, i) => {
-    const active = i === weekIdx ? 'border-left:2px solid var(--accent);padding-left:10px;' : '';
-    return `
-      <div class="narrativa-modal-week" style="${active}">
-        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-bottom:8px">
-          ${w.label.toUpperCase()} &nbsp; <span style="color:var(--accent)">${w.from} → ${w.to}</span>
-        </div>
-        <div>${buildCloud(w.terms, 40, w.from, w.to)}</div>
-      </div>`;
-  }).join('');
-  modal.classList.add('open');
-}
-
-function closeNarrativaModal() {
-  document.getElementById('narrativaModal').classList.remove('open');
-}
-document.getElementById('narrativaModal').addEventListener('click', function(e) {
-  if (e.target === this) closeNarrativaModal();
-});
 </script>
 </body>
 </html>
