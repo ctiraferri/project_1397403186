@@ -60,7 +60,7 @@
     background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
     pointer-events:none;
   }
-  .wrapper { position:relative; z-index:1; max-width:1680px; margin:0 auto; padding:16px 20px 30px; }
+  .wrapper { position:relative; z-index:1; max-width:1680px; margin:0 auto; padding:16px 20px 30px; overflow-x:hidden; }
 
   /* HEADER */
   header {
@@ -534,7 +534,7 @@
   #page2 .page-title { font-family:var(--font-display); font-size:28px; color:var(--text-main); letter-spacing:4px; }
   #page2 .page-subtitle { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-dim); }
   #page2 .page-period { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-faint); text-align:right; }
-  #page2 .listening-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr; gap:16px; }
+  #page2 .listening-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr; gap:16px; min-width:0; }
   #page2 .row-1 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
   #page2 .row-3 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
   #page2 .panel { background:var(--bg-panel); border:1px solid var(--border); padding:16px 18px; }
@@ -791,6 +791,7 @@
   #p2ModalOverlay .lp-eff-mid  { color:var(--yellow); }
   #p2ModalOverlay .lp-eff-low  { color:var(--red); }
   /* Responsive P2 */
+  @media (max-width:1400px) { #page2 .cards-grid { grid-template-columns:repeat(5,1fr); } }
   @media (max-width:1100px) {
     #page2 .row-1, #page2 .row-3 { grid-template-columns:1fr; }
     #page2 .ica-layout { grid-template-columns:180px 1fr; }
@@ -827,7 +828,7 @@
   #page3 .page-title { font-family:var(--font-display); font-size:28px; color:var(--text-main); letter-spacing:4px; }
   #page3 .page-subtitle { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-dim); }
   #page3 .page-period { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-faint); text-align:right; }
-  #page3 .listening-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr; gap:16px; }
+  #page3 .listening-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr; gap:16px; min-width:0; }
   #page3 .row-1 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
   #page3 .row-3 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
   #page3 .panel { background:var(--bg-panel); border:1px solid var(--border); padding:16px 18px; }
@@ -1101,6 +1102,7 @@
   #p2ModalOverlay .lp-eff-mid  { color:var(--yellow); }
   #p2ModalOverlay .lp-eff-low  { color:var(--red); }
   /* Responsive P2 */
+  @media (max-width:1400px) { #page3 .cards-grid { grid-template-columns:repeat(5,1fr); } }
   @media (max-width:1100px) {
     #page3 .row-1, #page3 .row-3 { grid-template-columns:1fr; }
     #page3 .ica-layout { grid-template-columns:180px 1fr; }
@@ -1366,7 +1368,7 @@
         <div class="page-menu" id="pageMenu">
           <button class="page-menu-item active" onclick="switchPage(1)">PÁG. 01 / OVERVIEW</button>
           <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / RADAR</button>
-          <button class="page-menu-item" onclick="switchPage(3)">PÁG. 03 / MENCIONES</button>
+          <button class="page-menu-item" onclick="switchPage(3)" style="display:none">PÁG. 03 / MENCIONES</button>
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
@@ -1383,6 +1385,7 @@
     <button class="filter-btn reset" onclick="resetFilter()">RESET</button>
     <button class="filter-btn preset" onclick="filterCurrentMonth()">MES ACTUAL</button>
     <button class="filter-btn preset" onclick="filterPrevMonth()">MES ANT.</button>
+    <button class="filter-btn preset" onclick="filterLast48h()">Últ. 48hs.</button>
     <div class="filter-count">Mostrando <span id="filteredCount">0</span> menciones</div>
   </div>
 
@@ -2375,6 +2378,15 @@ function filterPrevMonth() {
   const d = String(last.getDate()).padStart(2, '0');
   document.getElementById('dateFrom').value = `${y}-${m}-01`;
   document.getElementById('dateTo').value   = `${y}-${m}-${d}`;
+  applyFilter();
+}
+function filterLast48h() {
+  const now = new Date();
+  const yesterday = new Date(now.getTime() - 1*86400000);
+  const twoDaysAgo = new Date(now.getTime() - 2*86400000);
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  document.getElementById('dateFrom').value = fmt(twoDaysAgo);
+  document.getElementById('dateTo').value   = fmt(yesterday);
   applyFilter();
 }
 function clearKwFilter() {
