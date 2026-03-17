@@ -2607,8 +2607,8 @@ function calcICS2(d) {
 function calcTM(d) {
   if (!d.length) return {score:0, status:'SIN DATOS'};
   const total = d.length;
-  const pos = d.filter(m => m.custom_sentiment === 'positive').length;
-  const neg = d.filter(m => m.custom_sentiment === 'negative').length;
+  const pos = d.filter(m => getSentiment(m) === 'positive').length;
+  const neg = d.filter(m => getSentiment(m) === 'negative').length;
   const score = parseFloat(((pos - neg) / total * 100).toFixed(1));
   let status = 'ESTABLE';
   if (score > 10) status = 'FAVORABLE';
