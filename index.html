@@ -3312,7 +3312,7 @@ function o_lpRenderInd04() {
       <div class="op-top">
         <div class="op-size ${szSub}"><div class="op-size-num">${sz}</div><div class="op-size-label">MEDIOS</div></div>
         <div class="op-meta">
-          <div class="op-title" title="${(op.title||'').replace(/"/g,'&quot;')}">${op.title||'(Sin título)'}</div>
+          <div class="op-title" title="${(op.title||'').replace(/"/g,'&quot;')}" style="cursor:pointer;text-decoration:underline;text-decoration-color:rgba(255,255,255,.2)" onclick="openOpMentions(${JSON.stringify(op.mention_ids||[]).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}, '${(op.title||'Sin título').replace(/'/g,"\\'")}')">${op.title||'(Sin título)'}</div>
           <div class="op-date">${dateStr} · ${op.category||'—'}</div>
         </div>
         <div class="op-badges">
@@ -3814,7 +3814,7 @@ function p2RenderInd03(listenData) {
       <div class="op-top">
         <div class="op-size ${szSub}"><div class="op-size-num">${sz}</div><div class="op-size-label">MEDIOS</div></div>
         <div class="op-meta">
-          <div class="op-title" title="${(op.title||'').replace(/"/g,'&quot;')}">${op.title||'(Sin título)'}</div>
+          <div class="op-title" title="${(op.title||'').replace(/"/g,'&quot;')}" style="cursor:pointer;text-decoration:underline;text-decoration-color:rgba(255,255,255,.2)" onclick="openOpMentions(${JSON.stringify(op.mention_ids||[]).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}, '${(op.title||'Sin título').replace(/'/g,"\\'")}')">${op.title||'(Sin título)'}</div>
           <div class="op-date">${dateStr} · ${op.category||'—'}</div>
         </div>
         <div class="op-badges">
@@ -4426,6 +4426,17 @@ async function openTermMentions(term, from, to) {
   } catch(e) {
     document.getElementById('drawerSubtitle').textContent = 'Error cargando menciones';
   }
+}
+
+function openOpMentions(mentionIds, title) {
+  const ids = new Set((mentionIds||[]).map(String));
+  const matches = ALL_MENTIONS.filter(m => ids.has(String(m.mention_id)));
+  document.getElementById('drawerTitle').textContent = (title||'Operación detectada').toUpperCase();
+  document.getElementById('drawerSubtitle').textContent =
+    `${matches.length} mención${matches.length!==1?'es':''} en ${ids.size} medio${ids.size!==1?'s':''}`;
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  renderDrawerMentions(matches, []);
 }
 
 function renderNarrativa() {
