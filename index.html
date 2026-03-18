@@ -1314,7 +1314,7 @@
     .p2-ica-number { font-size:56px; }
   }
 
-  /* ── Narrativa Dominante ────────────────────────────── */
+  /* ── Términos Asociados ────────────────────────────── */
   .narrativa-section { display:flex; flex-direction:column; gap:0; height:100%; }
   .narrativa-week { flex:1; padding:8px 0; border-bottom:1px solid var(--border-dim); overflow:visible; position:relative; }
   .narrativa-week:last-child { border-bottom:none; }
@@ -1324,6 +1324,60 @@
   .narrativa-cloud { line-height:1.6; }
   .nterm { display:inline-block; margin:2px 3px; padding:2px 7px; border:1px solid currentColor; font-family:var(--font-mono); cursor:pointer; transition:opacity 0.2s; }
   .nterm:hover { opacity:0.7; }
+
+  /* ── Google Trends Panel ────────────────────────────── */
+  .gtrends-row { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-top:16px; }
+  @media (max-width:1200px) { .gtrends-row { grid-template-columns:1fr; } }
+  .gtrends-toggle { display:flex; gap:6px; margin-bottom:10px; }
+  .gtrends-toggle-btn {
+    font-family:var(--font-mono); font-size:9px; letter-spacing:2px;
+    padding:4px 10px; border:1px solid var(--border); background:transparent;
+    color:var(--text-dim); cursor:pointer; transition:all 0.2s;
+  }
+  .gtrends-toggle-btn.active { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+  .gtrends-toggle-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .gtrends-kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px; }
+  @media (max-width:768px) { .gtrends-kpi-grid { grid-template-columns:repeat(2,1fr); } }
+  .gtrends-kpi {
+    background:var(--bg-card); border:1px solid var(--border-dim); padding:10px 12px;
+    position:relative; overflow:hidden;
+  }
+  .gtrends-kpi-label { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; margin-bottom:4px; }
+  .gtrends-kpi-val { font-family:var(--font-display); font-size:28px; line-height:1; transition:all 0.4s; }
+  .gtrends-kpi-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-top:3px; }
+  .gtrends-kpi-arrow { display:inline-block; margin-left:4px; font-size:14px; }
+  .spike-badge {
+    display:inline-block; font-family:var(--font-mono); font-size:8px; letter-spacing:1px;
+    padding:2px 6px; margin-left:6px; vertical-align:middle;
+  }
+  .spike-badge.alerta { background:var(--red-dim); border:1px solid rgba(255,59,92,0.4); color:var(--red); }
+  .spike-badge.pre-alerta { background:var(--yellow-dim); border:1px solid rgba(255,214,0,0.4); color:var(--yellow); }
+  .gtrends-queries-list { display:flex; flex-direction:column; gap:0; }
+  .gtrends-query-item {
+    display:flex; align-items:center; gap:8px; padding:5px 0;
+    border-bottom:1px solid var(--border-dim); font-family:var(--font-mono); font-size:12px;
+  }
+  .gtrends-query-item:last-child { border-bottom:none; }
+  .gtrends-query-rank { color:var(--text-faint); font-size:10px; width:16px; text-align:center; }
+  .gtrends-query-term { flex:1; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .gtrends-query-bar { width:60px; height:3px; background:var(--border); flex-shrink:0; }
+  .gtrends-query-bar-fill { height:100%; background:var(--accent); transition:width 0.4s; }
+  .gtrends-query-val { color:var(--accent); font-size:11px; width:40px; text-align:right; }
+  .gtrends-query-section { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; margin:10px 0 6px; padding-bottom:4px; border-bottom:1px solid var(--border-dim); }
+  .gtrends-query-section:first-child { margin-top:0; }
+  .gtrends-query-rising { color:var(--green); }
+  /* Gtrends modal */
+  .gtrends-modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:20px; overflow-y:auto; }
+  @media (max-width:768px) { .gtrends-modal-grid { grid-template-columns:1fr; } }
+  .gtrends-modal-chart { height:300px; position:relative; }
+  .gtrends-modal-table { width:100%; border-collapse:collapse; font-family:var(--font-mono); font-size:11px; }
+  .gtrends-modal-table th {
+    text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);
+    color:var(--text-dim); font-size:9px; letter-spacing:2px; font-weight:400;
+  }
+  .gtrends-modal-table td { padding:5px 8px; border-bottom:1px solid var(--border-dim); color:var(--text-main); }
+  .gtrends-modal-table tr:hover td { background:var(--bg-hover); }
+
   /* Panel & Modal Briefing IA */
   #briefingPanel { overflow-y:auto; }
   #briefingPanel .panel-title { font-size:9px; letter-spacing:2px; margin-bottom:10px; padding-bottom:8px; }
@@ -1369,6 +1423,7 @@
           <button class="page-menu-item active" onclick="switchPage(1)">PÁG. 01 / OVERVIEW</button>
           <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / RADAR</button>
           <button class="page-menu-item" onclick="switchPage(3)" style="display:none">PÁG. 03 / MENCIONES</button>
+          <button class="page-menu-item" onclick="switchPage(5)" style="display:none">PÁG. 03 / G TRENDS</button>
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
@@ -1569,9 +1624,9 @@
   <!-- BOTTOM GRID -->
   <div class="bottom-grid">
 
-    <!-- NARRATIVA DOMINANTE -->
+    <!-- TÉRMINOS ASOCIADOS -->
     <div class="panel" id="narrativaPanel">
-      <div class="panel-title">NARRATIVA DOMINANTE</div>
+      <div class="panel-title">TÉRMINOS ASOCIADOS</div>
       <div class="narrativa-section" id="narrativaBody">
         <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">Cargando...</div>
       </div>
@@ -2053,6 +2108,86 @@
 
   </div><!-- /page4 -->
 
+  <!-- ═══════════════════════════════════════════ PAGE 5: G TRENDS ═══════════════════════════════════════════ -->
+  <div id="page5" class="page-section">
+
+    <div class="gtrends-row">
+      <div class="panel" id="gtrendsPanel">
+        <div class="panel-title">
+          GOOGLE TRENDS · INTERÉS PÚBLICO
+          <div class="expand-btn" onclick="openGtrendsModal()" title="Expandir">⛶</div>
+        </div>
+        <div class="gtrends-toggle">
+          <button class="gtrends-toggle-btn active" data-st="both" onclick="setGtrendsMode('both',this)">WEB + NOTICIAS</button>
+          <button class="gtrends-toggle-btn" data-st="web" onclick="setGtrendsMode('web',this)">WEB</button>
+          <button class="gtrends-toggle-btn" data-st="news" onclick="setGtrendsMode('news',this)">NOTICIAS</button>
+        </div>
+        <div class="chart-container" style="height:340px"><canvas id="gtrendsChart"></canvas></div>
+        <div class="gtrends-kpi-grid">
+          <div class="gtrends-kpi">
+            <div class="gtrends-kpi-label">IIP HOY</div>
+            <div class="gtrends-kpi-val" id="gtKpiIip" style="color:var(--accent)">—</div>
+            <div class="gtrends-kpi-sub" id="gtKpiIipSub">web / noticias</div>
+          </div>
+          <div class="gtrends-kpi">
+            <div class="gtrends-kpi-label">MOMENTUM 7D</div>
+            <div class="gtrends-kpi-val" id="gtKpiMomentum" style="color:var(--text-main)">—</div>
+            <div class="gtrends-kpi-sub">variación semanal</div>
+          </div>
+          <div class="gtrends-kpi">
+            <div class="gtrends-kpi-label">SPIKE SCORE</div>
+            <div class="gtrends-kpi-val" id="gtKpiSpike" style="color:var(--text-main)">—</div>
+            <div class="gtrends-kpi-sub" id="gtKpiSpikeSub">desviaciones</div>
+          </div>
+          <div class="gtrends-kpi">
+            <div class="gtrends-kpi-label">GAP</div>
+            <div class="gtrends-kpi-val" id="gtKpiGap" style="color:var(--text-main)">—</div>
+            <div class="gtrends-kpi-sub" id="gtKpiGapSub">web vs noticias</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel" id="gtrendsQueriesPanel">
+        <div class="panel-title">BÚSQUEDAS RELACIONADAS</div>
+        <div id="gtrendsQueriesBody">
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim)">Cargando...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GTRENDS MODAL -->
+    <div class="modal-overlay" id="gtrendsModal">
+      <div class="modal" style="max-width:1100px">
+        <div class="modal-header">
+          <div class="modal-title">GOOGLE TRENDS · DETALLE</div>
+          <div class="modal-close" onclick="closeGtrendsModal()">✕</div>
+        </div>
+        <div class="gtrends-modal-grid">
+          <div>
+            <div class="gtrends-modal-chart"><canvas id="gtrendsModalChart"></canvas></div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);letter-spacing:2px;margin-bottom:8px">INDICADORES POR DÍA</div>
+            <div style="max-height:280px;overflow-y:auto">
+              <table class="gtrends-modal-table" id="gtrendsModalTable">
+                <thead><tr><th>FECHA</th><th>IIP</th><th>MOM.7D</th><th>SPIKE</th><th>GAP</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);letter-spacing:2px;margin-bottom:8px">TOP QUERIES</div>
+            <div id="gtrendsModalTopQueries"></div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);letter-spacing:2px;margin-bottom:8px">RISING QUERIES</div>
+            <div id="gtrendsModalRisingQueries"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page5 -->
+
   <footer>
     <span>// WAR ROOM DIGITAL · INTELIGENCIA NARRATIVA, OPORTUNIDADES Y RIESGO POLÍTICO</span>
     <span>FUENTE: BRAND24 + INGESTA AUTOMATIZADA + GOOGLE TRENDS · IA ESTRATEGICA</span>
@@ -2272,6 +2407,7 @@ function switchPage(n) {
   if (n === 2 && !oldP2Initialized) { oldP2Initialized = true; oldP2Init(); }
   if (n === 3 && !p2Initialized) { p2Initialized = true; p2Init(); }
   if (n === 3 && !p3Initialized) { p3Initialized = true; p3Init(); }
+  if (n === 5) loadGtrends();
 }
 function togglePageMenu() {
   document.getElementById('pageNav').classList.toggle('open');
@@ -2346,6 +2482,8 @@ function applyFilter() {
   if (oldP2Initialized) oldP2LoadData();
   if (p3Initialized) p3LoadData();
   loadBriefing();
+  // Reload gtrends if on that page
+  if (document.getElementById('page5').classList.contains('active')) loadGtrends();
 }
 function resetFilter() {
   const _localToday = (d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)(new Date());
@@ -4287,7 +4425,7 @@ function lpRenderModal() {
   }).join('');
 }
 
-// ── Narrativa Dominante ────────────────────────────────────────
+// ── Términos Asociados ────────────────────────────────────────
 let NARRATIVA_DATA = null;
 
 // ── Briefing IA ────────────────────────────────────────────────
@@ -4352,10 +4490,10 @@ function openBriefingModal() {
     `<p><strong>Polarización:</strong> ${b.polarizacion_pct}%</p>` +
     `<p><strong>ICS 2.0:</strong> ${b.ics2_score !== undefined ? b.ics2_score : '—'} [${esc(b.ics2_status || '')}]</p>` +
     (b.ics2_formula ? `<p style="color:#8ba3b8;font-size:10px">${esc(b.ics2_formula)}</p>` : '');
-  // Top 5 narrativas
+  // Top 5 términos
   const narrs = b.top5_narrativas || [];
   if (narrs.length) {
-    briefingHtml += '<p><strong>Top 5 narrativas:</strong></p><ul>';
+    briefingHtml += '<p><strong>Top 5 términos:</strong></p><ul>';
     narrs.forEach(n => {
       const term = esc(n.narrativa || n.term || '');
       const sentPred = n.sentimiento_predominante || (n.neg > n.pos ? 'neg' : n.pos > n.neg ? 'pos' : 'neu');
@@ -4364,10 +4502,10 @@ function openBriefingModal() {
     });
     briefingHtml += '</ul>';
   }
-  // Narrativas negativas en baja
+  // Términos negativos en baja
   const negBaja = b.narrativas_negativas_en_baja || [];
   if (negBaja.length) {
-    briefingHtml += '<p><strong>Narrativas negativas en baja:</strong></p><ul>';
+    briefingHtml += '<p><strong>Términos negativos en baja:</strong></p><ul>';
     negBaja.forEach(n => {
       briefingHtml += `<li>${esc(n.narrativa || n.term || '')} — actual: ${n.actual || n.curr_n || 0}, hace 2 sem: ${n.hace_2_semanas || n.prev_n || 0} (<span style="color:#4caf50">${n.variacion_pct || n.delta_pct || 0}%</span>)</li>`;
     });
@@ -4473,6 +4611,306 @@ function openOpMentions(mentionIds, title) {
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
   renderDrawerMentions(matches, []);
+}
+
+// ══════════════════════════════════════════
+// GOOGLE TRENDS
+// ══════════════════════════════════════════
+let GTRENDS_WEB = null, GTRENDS_NEWS = null;
+let gtrendsChart = null, gtrendsModalChartObj = null;
+let gtrendsMode = 'both'; // 'both', 'web', 'news'
+
+function setGtrendsMode(mode, btn) {
+  gtrendsMode = mode;
+  document.querySelectorAll('.gtrends-toggle-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderGtrendsChart();
+}
+
+async function loadGtrends() {
+  const from = document.getElementById('dateFrom').value || '2026-01-01';
+  const to   = document.getElementById('dateTo').value || new Date().toISOString().slice(0,10);
+  const fetchOpts = { headers: { Accept:'application/json', 'ngrok-skip-browser-warning':'true' }, mode:'cors' };
+  try {
+    const [webResp, newsResp] = await Promise.all([
+      fetch(`${CONFIG.apiUrl}/api/v1/gtrends?project_id=${CONFIG.projectId}&from_date=${from}&to_date=${to}&search_type=web`, fetchOpts),
+      fetch(`${CONFIG.apiUrl}/api/v1/gtrends?project_id=${CONFIG.projectId}&from_date=${from}&to_date=${to}&search_type=news`, fetchOpts),
+    ]);
+    GTRENDS_WEB  = webResp.ok  ? await webResp.json()  : null;
+    GTRENDS_NEWS = newsResp.ok ? await newsResp.json() : null;
+    renderGtrendsChart();
+    renderGtrendsKPIs();
+    renderGtrendsQueries();
+  } catch(e) {
+    console.warn('Google Trends no disponible:', e);
+  }
+}
+
+function renderGtrendsChart(canvasId, isModal) {
+  const canvas = document.getElementById(canvasId || 'gtrendsChart');
+  if (!canvas) return;
+  const chartRef = isModal ? 'gtrendsModalChartObj' : 'gtrendsChart';
+
+  // Destroy previous
+  if (!isModal && gtrendsChart) { gtrendsChart.destroy(); gtrendsChart = null; }
+  if (isModal && gtrendsModalChartObj) { gtrendsModalChartObj.destroy(); gtrendsModalChartObj = null; }
+
+  const datasets = [];
+  const allDates = new Set();
+
+  // Use indicator dates as source of truth (interest may have 1 extra day without computed indicators)
+  if ((gtrendsMode === 'both' || gtrendsMode === 'web') && GTRENDS_WEB && GTRENDS_WEB.indicators) {
+    GTRENDS_WEB.indicators.forEach(d => allDates.add(d.date));
+  }
+  if ((gtrendsMode === 'both' || gtrendsMode === 'news') && GTRENDS_NEWS && GTRENDS_NEWS.indicators) {
+    GTRENDS_NEWS.indicators.forEach(d => allDates.add(d.date));
+  }
+  // Fallback to interest dates if no indicators exist
+  if (!allDates.size) {
+    if ((gtrendsMode === 'both' || gtrendsMode === 'web') && GTRENDS_WEB && GTRENDS_WEB.interest)
+      GTRENDS_WEB.interest.forEach(d => allDates.add(d.date));
+    if ((gtrendsMode === 'both' || gtrendsMode === 'news') && GTRENDS_NEWS && GTRENDS_NEWS.interest)
+      GTRENDS_NEWS.interest.forEach(d => allDates.add(d.date));
+  }
+
+  const labels = [...allDates].sort();
+  if (!labels.length) {
+    // no data — show empty state
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+
+  if ((gtrendsMode === 'both' || gtrendsMode === 'web') && GTRENDS_WEB && GTRENDS_WEB.interest) {
+    const map = Object.fromEntries(GTRENDS_WEB.interest.map(d => [d.date, d.value]));
+    datasets.push({
+      label: 'IIP Web',
+      data: labels.map(d => map[d] ?? null),
+      borderColor: '#00d4ff',
+      backgroundColor: 'rgba(0,212,255,0.08)',
+      borderWidth: 2, pointRadius: 2, pointHoverRadius: 5,
+      fill: true, tension: 0.3, spanGaps: true,
+    });
+  }
+  if ((gtrendsMode === 'both' || gtrendsMode === 'news') && GTRENDS_NEWS && GTRENDS_NEWS.interest) {
+    const map = Object.fromEntries(GTRENDS_NEWS.interest.map(d => [d.date, d.value]));
+    datasets.push({
+      label: 'IIP Noticias',
+      data: labels.map(d => map[d] ?? null),
+      borderColor: '#ffd600',
+      backgroundColor: 'rgba(255,214,0,0.06)',
+      borderWidth: 2, pointRadius: 2, pointHoverRadius: 5,
+      fill: true, tension: 0.3, spanGaps: true,
+    });
+  }
+
+  // Spike markers — red dots on web line where spike_alert >= 2
+  if (GTRENDS_WEB && GTRENDS_WEB.indicators) {
+    const spikeMap = {};
+    GTRENDS_WEB.indicators.forEach(ind => {
+      if (ind.spike_alert >= 2) spikeMap[ind.date] = ind.iip;
+    });
+    if (Object.keys(spikeMap).length) {
+      datasets.push({
+        label: 'Spike Alert',
+        data: labels.map(d => spikeMap[d] ?? null),
+        borderColor: '#ff3b5c',
+        backgroundColor: '#ff3b5c',
+        pointRadius: 6, pointHoverRadius: 8,
+        pointStyle: 'triangle',
+        showLine: false, fill: false,
+      });
+    }
+  }
+
+  const chartObj = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, position: 'top', labels: { color:'#5a7a94', font:{family:'JetBrains Mono',size:10}, boxWidth:12, padding:12 }},
+        tooltip: {
+          backgroundColor:'#0c1118', borderColor:'#1e2d3d', borderWidth:1,
+          titleFont:{family:'JetBrains Mono',size:10}, bodyFont:{family:'JetBrains Mono',size:11},
+          titleColor:'#5a7a94', bodyColor:'#d4e4f0',
+        },
+      },
+      scales: {
+        x: { grid:{color:'rgba(30,45,61,0.4)'}, ticks:{color:'#5a7a94',font:{family:'JetBrains Mono',size:9},maxRotation:45} },
+        y: { grid:{color:'rgba(30,45,61,0.4)'}, ticks:{color:'#5a7a94',font:{family:'JetBrains Mono',size:10}}, min:0, max:100, beginAtZero:true },
+      },
+    },
+  });
+
+  if (isModal) gtrendsModalChartObj = chartObj;
+  else gtrendsChart = chartObj;
+}
+
+function renderGtrendsKPIs() {
+  // Use latest day from web indicators, fallback to news
+  const webInd  = GTRENDS_WEB  && GTRENDS_WEB.indicators  && GTRENDS_WEB.indicators.length  ? GTRENDS_WEB.indicators[GTRENDS_WEB.indicators.length-1]   : null;
+  const newsInd = GTRENDS_NEWS && GTRENDS_NEWS.indicators && GTRENDS_NEWS.indicators.length ? GTRENDS_NEWS.indicators[GTRENDS_NEWS.indicators.length-1] : null;
+
+  // IIP
+  const iipEl = document.getElementById('gtKpiIip');
+  const iipSub = document.getElementById('gtKpiIipSub');
+  if (webInd || newsInd) {
+    const wv = webInd ? webInd.iip : '—';
+    const nv = newsInd ? newsInd.iip : '—';
+    iipEl.innerHTML = `<span style="color:var(--accent)">${wv}</span> <span style="color:var(--text-faint);font-size:16px">/</span> <span style="color:var(--yellow)">${nv}</span>`;
+    iipSub.textContent = 'web / noticias';
+  } else {
+    iipEl.textContent = '—';
+  }
+
+  // Momentum
+  const momEl = document.getElementById('gtKpiMomentum');
+  const ind = webInd || newsInd;
+  if (ind && ind.momentum_7d != null) {
+    const m = ind.momentum_7d;
+    const arrow = m > 0 ? '↑' : m < 0 ? '↓' : '→';
+    const color = m > 0 ? 'var(--green)' : m < 0 ? 'var(--red)' : 'var(--text-dim)';
+    momEl.innerHTML = `<span style="color:${color}">${m > 0 ? '+' : ''}${m.toFixed(1)}<span class="gtrends-kpi-arrow">${arrow}</span></span>`;
+  } else {
+    momEl.textContent = '—';
+  }
+
+  // Spike
+  const spikeEl = document.getElementById('gtKpiSpike');
+  const spikeSub = document.getElementById('gtKpiSpikeSub');
+  if (ind && ind.spike_score != null) {
+    const s = ind.spike_score;
+    let badge = '';
+    if (ind.spike_alert >= 3) badge = '<span class="spike-badge alerta">ALERTA</span>';
+    else if (ind.spike_alert >= 2) badge = '<span class="spike-badge pre-alerta">PRE-ALERTA</span>';
+    const color = ind.spike_alert >= 3 ? 'var(--red)' : ind.spike_alert >= 2 ? 'var(--yellow)' : 'var(--text-main)';
+    spikeEl.innerHTML = `<span style="color:${color}">${s.toFixed(1)}</span>${badge}`;
+    spikeSub.textContent = ind.spike_alert >= 2 ? 'pico detectado' : 'normal';
+  } else {
+    spikeEl.textContent = '—';
+  }
+
+  // Gap
+  const gapEl = document.getElementById('gtKpiGap');
+  const gapSub = document.getElementById('gtKpiGapSub');
+  if (ind && ind.gap != null) {
+    const g = ind.gap;
+    let label, color;
+    if (Math.abs(g) <= 10) { label = 'Alineado'; color = 'var(--green)'; }
+    else if (g > 10) { label = 'Demanda ciudadana'; color = 'var(--accent)'; }
+    else { label = 'Tema mediático'; color = 'var(--red)'; }
+    gapEl.innerHTML = `<span style="color:${color}">${g > 0 ? '+' : ''}${g.toFixed(0)}</span>`;
+    gapSub.textContent = label;
+  } else {
+    gapEl.textContent = '—';
+  }
+}
+
+function renderGtrendsQueries() {
+  const body = document.getElementById('gtrendsQueriesBody');
+  const data = GTRENDS_WEB || GTRENDS_NEWS;
+  if (!data || !data.related_queries) {
+    body.innerHTML = '<div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim)">Sin datos</div>';
+    return;
+  }
+  const { top, rising } = data.related_queries;
+  let html = '';
+
+  if (top && top.length) {
+    const maxVal = Math.max(...top.map(q => q.value || 0), 1);
+    html += '<div class="gtrends-query-section">POPULARES</div><div class="gtrends-queries-list">';
+    top.slice(0, 5).forEach((q, i) => {
+      const pct = ((q.value || 0) / maxVal * 100).toFixed(0);
+      html += `<div class="gtrends-query-item">
+        <span class="gtrends-query-rank">${i+1}</span>
+        <span class="gtrends-query-term">${q.term}</span>
+        <span class="gtrends-query-bar"><span class="gtrends-query-bar-fill" style="width:${pct}%"></span></span>
+        <span class="gtrends-query-val">${q.value || 0}</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  if (rising && rising.length) {
+    html += '<div class="gtrends-query-section">EN ASCENSO</div><div class="gtrends-queries-list">';
+    rising.slice(0, 3).forEach((q, i) => {
+      const pctLabel = q.pct_change || '—';
+      html += `<div class="gtrends-query-item">
+        <span class="gtrends-query-rank">${i+1}</span>
+        <span class="gtrends-query-term">${q.term}</span>
+        <span class="gtrends-query-val gtrends-query-rising">${pctLabel}</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  if (!html) html = '<div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim)">Sin queries</div>';
+  body.innerHTML = html;
+}
+
+function openGtrendsModal() {
+  document.getElementById('gtrendsModal').classList.add('open');
+  setTimeout(() => renderGtrendsChart('gtrendsModalChart', true), 100);
+  renderGtrendsModalTable();
+  renderGtrendsModalQueries();
+}
+
+function closeGtrendsModal() {
+  document.getElementById('gtrendsModal').classList.remove('open');
+}
+document.getElementById('gtrendsModal').addEventListener('click', function(e) {
+  if (e.target === this) closeGtrendsModal();
+});
+
+function renderGtrendsModalTable() {
+  const tbody = document.querySelector('#gtrendsModalTable tbody');
+  const indicators = (GTRENDS_WEB && GTRENDS_WEB.indicators) || (GTRENDS_NEWS && GTRENDS_NEWS.indicators) || [];
+  if (!indicators.length) { tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text-dim)">Sin datos</td></tr>'; return; }
+  tbody.innerHTML = indicators.slice().reverse().map(r => {
+    const momColor = r.momentum_7d > 0 ? 'var(--green)' : r.momentum_7d < 0 ? 'var(--red)' : 'var(--text-dim)';
+    const spikeColor = r.spike_alert >= 3 ? 'var(--red)' : r.spike_alert >= 2 ? 'var(--yellow)' : 'var(--text-main)';
+    return `<tr>
+      <td>${r.date}</td>
+      <td style="color:var(--accent)">${r.iip ?? '—'}</td>
+      <td style="color:${momColor}">${r.momentum_7d != null ? (r.momentum_7d > 0 ? '+' : '') + r.momentum_7d.toFixed(1) : '—'}</td>
+      <td style="color:${spikeColor}">${r.spike_score != null ? r.spike_score.toFixed(1) : '—'}</td>
+      <td>${r.gap != null ? r.gap.toFixed(0) : '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderGtrendsModalQueries() {
+  const data = GTRENDS_WEB || GTRENDS_NEWS;
+  if (!data || !data.related_queries) return;
+  const { top, rising } = data.related_queries;
+
+  const topEl = document.getElementById('gtrendsModalTopQueries');
+  if (top && top.length) {
+    const maxVal = Math.max(...top.map(q => q.value || 0), 1);
+    topEl.innerHTML = '<div class="gtrends-queries-list">' + top.slice(0, 25).map((q, i) => {
+      const pct = ((q.value || 0) / maxVal * 100).toFixed(0);
+      return `<div class="gtrends-query-item">
+        <span class="gtrends-query-rank">${i+1}</span>
+        <span class="gtrends-query-term">${q.term}</span>
+        <span class="gtrends-query-bar"><span class="gtrends-query-bar-fill" style="width:${pct}%"></span></span>
+        <span class="gtrends-query-val">${q.value || 0}</span>
+      </div>`;
+    }).join('') + '</div>';
+  } else { topEl.innerHTML = '<div style="color:var(--text-dim);font-size:9px">Sin datos</div>'; }
+
+  const risingEl = document.getElementById('gtrendsModalRisingQueries');
+  if (rising && rising.length) {
+    risingEl.innerHTML = '<div class="gtrends-queries-list">' + rising.slice(0, 25).map((q, i) => {
+      const pctLabel = q.pct_change || '—';
+      return `<div class="gtrends-query-item">
+        <span class="gtrends-query-rank">${i+1}</span>
+        <span class="gtrends-query-term">${q.term}</span>
+        <span class="gtrends-query-val gtrends-query-rising">${pctLabel}</span>
+      </div>`;
+    }).join('') + '</div>';
+  } else { risingEl.innerHTML = '<div style="color:var(--text-dim);font-size:9px">Sin datos</div>'; }
 }
 
 function renderNarrativa() {
