@@ -5109,6 +5109,10 @@ async function loadNarrativaIA() {
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     NARRATIVA_IA_DATA = await resp.json();
     _narrativaIACache[cacheKey] = NARRATIVA_IA_DATA;
+    // Corregir label de fechas con las fechas reales del payload (puede ser fallback)
+    if (datesEl && NARRATIVA_IA_DATA.from_date && NARRATIVA_IA_DATA.to_date) {
+      datesEl.textContent = `${NARRATIVA_IA_DATA.from_date} → ${NARRATIVA_IA_DATA.to_date}`;
+    }
     renderNarrativaIA(NARRATIVA_IA_DATA);
   } catch(e) {
     console.warn('Narrativa IA no disponible:', e);
