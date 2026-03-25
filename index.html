@@ -1444,6 +1444,11 @@
   .narrativa-ia-adj-tag { display:inline-block; padding:4px 12px; border:1px solid var(--accent); border-radius:4px; font-size:11px; color:var(--accent); letter-spacing:1px; cursor:pointer; transition:background 0.2s; }
   .narrativa-ia-adj-tag:hover { background:rgba(0,212,255,0.15); }
   .narrativa-ia-adj-ctx { font-size:10px; color:var(--text-dim); margin-top:6px; }
+  .narrativa-ia-ejes { list-style:none; padding:4px 0 0 12px; margin:4px 0 0; }
+  .narrativa-ia-ejes li { padding:2px 0; font-size:10px; color:var(--text-dim); border-bottom:none; }
+  .narrativa-ia-eje-bullet { color:#e05555; margin-right:4px; font-size:8px; }
+  .narrativa-ia-eje-count { color:#8ba3b8; font-size:9px; }
+  .narrativa-ia-eje-detalle { font-style:italic; }
 </style>
 </head>
 <body>
@@ -5151,11 +5156,23 @@ function renderNarrativaIA(data) {
     document.getElementById('niaPositivas').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas positivas en crecimiento</div>';
   }
 
-  // 3. Negativas en Crecimiento
+  // 3. Negativas en Crecimiento (con ejes de negatividad)
   const neg = data.negativas_crecieron || [];
   if (neg.length) {
     document.getElementById('niaNegativas').innerHTML = '<ul class="narrativa-ia-narr-list">' +
-      neg.map(n => `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`).join('') +
+      neg.map(n => {
+        let h = `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span>`;
+        const ejes = n.ejes || [];
+        if (ejes.length) {
+          h += '<ul class="narrativa-ia-ejes">';
+          ejes.forEach(e => {
+            h += `<li><span class="narrativa-ia-eje-bullet">●</span><strong>${esc(e.eje)}</strong> <span class="narrativa-ia-eje-count">(${e.menciones||0} menciones)</span> — <span class="narrativa-ia-eje-detalle">${esc(e.detalle)}</span></li>`;
+          });
+          h += '</ul>';
+        }
+        h += '</li>';
+        return h;
+      }).join('') +
       '</ul>';
   } else {
     document.getElementById('niaNegativas').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas negativas en crecimiento</div>';
