@@ -1664,6 +1664,7 @@
     <button class="filter-btn preset" onclick="filterCurrentMonth()">MES ACTUAL</button>
     <button class="filter-btn preset" onclick="filterPrevMonth()">MES ANT.</button>
     <button class="filter-btn preset" onclick="filterLast48h()">Últ. 48hs.</button>
+    <button class="filter-btn preset" onclick="filterLast24h()">Últ. 24hs.</button>
     <div class="filter-count">Mostrando <span id="filteredCount">0</span> menciones</div>
   </div>
 
@@ -2597,7 +2598,7 @@
               <div id="xaTypeB" class="xa-type-val" style="color:var(--orange)">0</div>
               <div class="xa-type-desc">Mismo texto entre cuentas</div>
             </div>
-            <div class="xa-type-card type-c">
+            <div class="xa-type-card type-c" onclick="xaOpenTypeC()" style="cursor:pointer" title="Ver tweets sincronizados">
               <div class="xa-type-icon">📡</div>
               <div class="xa-type-label">TIPO C · SINCRONIZADAS</div>
               <div id="xaTypeC" class="xa-type-val" style="color:var(--yellow)">0</div>
@@ -2929,6 +2930,15 @@ function resetFilter() {
   updateAll();
   if (oldP2Initialized) oldP2LoadData();
   if (p3Initialized) p3LoadData();
+  if (xaInitialized) xaLoadData();
+}
+function filterLast24h() {
+  const now = new Date();
+  const yesterday = new Date(now.getTime() - 1*86400000);
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  document.getElementById('dateFrom').value = fmt(yesterday);
+  document.getElementById('dateTo').value   = fmt(yesterday);
+  applyFilter();
 }
 function filterCurrentMonth() {
   const now = new Date();
@@ -5850,6 +5860,42 @@ function xaOpenHandle(handle, displayName, count) {
   document.getElementById('drawerSubtitle').textContent =
     `${displayName} · ${matches.length} menciones en el período (${from} → ${to})`;
   renderDrawerMentions(matches, [handle, displayName].filter(Boolean));
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function xaOpenTypeC() {
+  if (!xaData || !xaData.bursts) return;
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  // Collect all handles involved in bursts (Tipo C = coordinated timing)
+  const burstHandles = new Set();
+  xaData.bursts.forEach(b => (b.handles || []).forEach(h => burstHandles.add(h.toLowerCase())));
+  // Also exclude autocopy/diffusion handles to isolate Tipo C
+  const diffusionHandles = new Set();
+  (xaData.diffusion_clusters || []).forEach(c => (c.handles || []).forEach(h => diffusionHandles.add(h.toLowerCase())));
+  const autocopyHandles = new Set();
+  (xaData.autocopy || []).forEach(a => { if (a.handle) autocopyHandles.add(a.handle.toLowerCase()); });
+  // Tipo C handles: in bursts but not in diffusion/autocopy
+  const typeCHandles = new Set([...burstHandles].filter(h => !diffusionHandles.has(h) && !autocopyHandles.has(h)));
+  // If no exclusive Tipo C handles, fall back to all burst handles
+  const targetHandles = typeCHandles.size > 0 ? typeCHandles : burstHandles;
+  const matches = ALL_MENTIONS.filter(m => {
+    if (m.date < from || m.date > to) return false;
+    if (m.category !== 'X (Twitter)') return false;
+    const url = (m.url || '').toLowerCase();
+    return [...targetHandles].some(h =>
+      url.includes('twitter.com/' + h + '/status/') ||
+      url.includes('x.com/' + h + '/status/')
+    );
+  });
+  const burstInfo = xaData.bursts.slice(0, 5).map(b =>
+    `${b.handles.map(h=>'@'+h).join(', ')} (${b.window_start?.slice(0,16)||''})`
+  ).join(' · ');
+  document.getElementById('drawerTitle').textContent = 'TIPO C · SINCRONIZADAS';
+  document.getElementById('drawerSubtitle').textContent =
+    `${matches.length} menciones de ${targetHandles.size} cuentas con timing coordinado (${from} → ${to})`;
+  renderDrawerMentions(matches, []);
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
 }
